@@ -59,7 +59,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   if (existingUser) return { error: "Email already in use!" };
 
-  const isResendConfigured = !!process.env.RESEND_API_KEY;
+  const isMailerConfigured = !!process.env.SMTP_USER;
 
   await db.user.create({
     data: { 
@@ -67,12 +67,12 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
       email, 
       password: hashedPassword,
       role,
-      emailVerified: isResendConfigured ? null : new Date(),
+      emailVerified: isMailerConfigured ? null : new Date(),
     },
   });
 
-  if (!isResendConfigured) {
-    return { success: "Account created and verified! (Auto-verified because RESEND_API_KEY is missing)" };
+  if (!isMailerConfigured) {
+    return { success: "Account created and verified! (Auto-verified because SMTP_USER is missing)" };
   }
 
   const verificationToken = await generateVerificationToken(email);
@@ -88,7 +88,12 @@ export const resetPassword = async (values: z.infer<typeof ResetSchema>) => {
   const { email } = validatedFields.data;
   const existingUser = await getUserByEmail(email);
 
-  if (!existingUser) return { error: "Email not found!" };
+  if (!existingUser) {
+    await db.recoveryRequest.create({ data: { email, status: "SUSPICIOUS" } });
+    return { error: "Email not found!" };
+  }
+
+  await db.recoveryRequest.create({ data: { email, status: "PENDING" } });
 
   const passwordResetToken = await generatePasswordResetToken(email);
   await sendPasswordResetEmail(passwordResetToken.email, passwordResetToken.token);
@@ -122,6 +127,11 @@ export const newPassword = async (values: z.infer<typeof NewPasswordSchema>, tok
 
   await db.passwordResetToken.delete({
     where: { id: existingToken.id }
+  });
+
+  await db.recoveryRequest.updateMany({
+    where: { email: existingToken.email, status: "PENDING" },
+    data: { status: "VERIFIED" }
   });
 
   return { success: "Password updated!" };

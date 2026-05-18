@@ -7,11 +7,21 @@ const isProtectedRoute = (pathname: string) => {
   return pathname.startsWith("/dashboard");
 };
 
+const isAdminRoute = (pathname: string) => {
+  return pathname.startsWith("/admin");
+};
+
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const { nextUrl } = req;
 
   if (isProtectedRoute(nextUrl.pathname)) {
+    if (!isLoggedIn) {
+      return Response.redirect(new URL("/sign-in", nextUrl));
+    }
+  }
+
+  if (isAdminRoute(nextUrl.pathname)) {
     if (!isLoggedIn) {
       return Response.redirect(new URL("/sign-in", nextUrl));
     }

@@ -8,7 +8,6 @@ import { UserButton } from '@/components/auth/user-button';
 
 export default function LandingPage() {
   const { data: session } = useSession();
-  const userId = session?.user?.id;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<string | null>("collapseOne");
   return (
@@ -45,9 +44,9 @@ export default function LandingPage() {
             <div className="row align-items-center">
               <div className="col-lg-12">
                 <nav className="navbar navbar-expand-lg">
-                  <a className="navbar-brand" href="/">
+                  <Link className="navbar-brand" href="/">
                     <img src="/logo.png" alt="Logo" width={150} />
-                  </a>
+                  </Link>
                   <button className={`navbar-toggler ${isMobileMenuOpen ? "active" : ""}`} type="button" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                     <span className="toggler-icon"></span>
                     <span className="toggler-icon"></span>
@@ -314,9 +313,9 @@ export default function LandingPage() {
         src="/assets/js/wow.min.js" 
         strategy="afterInteractive"
         onLoad={() => {
-          // @ts-ignore
+          // @ts-expect-error: WOW is loaded globally in script
           if (typeof WOW !== 'undefined') {
-            // @ts-ignore
+            // @ts-expect-error: WOW is loaded globally in script
             new WOW().init();
           }
         }}

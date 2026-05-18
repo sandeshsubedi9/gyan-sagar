@@ -41,9 +41,10 @@ export const Actions = ({ disabled, courseId, isPublished }: ActionsProps) => {
                 // Redirect to the public course player after publishing
                 router.push(`/courses/${courseId}`);
             }
-        } catch (error: any) {
+        } catch (error) {
             console.log(error);
-            toast.error(error.response?.data || "Something went wrong.");
+            const err = error as { response?: { data?: string } };
+            toast.error(err.response?.data || "Something went wrong.");
         } finally {
             setIsLoading(false);
         }
@@ -61,9 +62,10 @@ export const Actions = ({ disabled, courseId, isPublished }: ActionsProps) => {
             toast.success("Course deleted successfully.");
             router.refresh();
             router.push(`/dashboard/teacher/courses`);
-        } catch (error: any) {
+        } catch (error) {
             console.log(error);
-            toast.error(error.response?.data || "Something went wrong.");
+            const err = error as { response?: { data?: string } };
+            toast.error(err.response?.data || "Something went wrong.");
         }
         finally {
             setIsLoading(false);

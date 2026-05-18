@@ -31,6 +31,9 @@ export const getCourses = async (
         const courses = await db.course.findMany({
     where: {
         isPublished: true,
+        reviewStatus: {
+            notIn: ["FLAGGED", "REJECTED"]
+        },
         title: {
             contains: title,
         },

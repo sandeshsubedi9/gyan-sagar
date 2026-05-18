@@ -28,6 +28,9 @@ export const getHighestSellingCourses = async (): Promise<CourseWithRevenue[]> =
     const courses = await db.course.findMany({
       where: {
         isPublished: true,
+        reviewStatus: {
+          notIn: ["FLAGGED", "REJECTED"]
+        },
       },
       include: {
         category: true,

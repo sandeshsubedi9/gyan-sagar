@@ -175,7 +175,7 @@ export const LoginForm = () => {
       </CardContent>
       <CardFooter className="flex justify-center">
         <div className="text-sm text-gray-500">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/sign-up" className="text-[#1D2A5D] font-medium hover:underline">
             Register here
           </Link>

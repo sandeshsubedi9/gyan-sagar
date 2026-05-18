@@ -38,9 +38,10 @@ export const ChapterActions = ({ disabled, courseId, chapterId, isPublished }: C
                 toast.success("Chapter Published");
                 router.refresh();
             }
-        } catch (error: any) {
+        } catch (error) {
             console.log(error);
-            toast.error(error.response?.data || "Something went wrong.");
+            const err = error as { response?: { data?: string } };
+            toast.error(err.response?.data || "Something went wrong.");
         } finally {
             setIsLoading(false);
         }

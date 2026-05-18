@@ -10,6 +10,14 @@ datasource db {
 enum UserRole {
   STUDENT
   TEACHER
+  ADMIN
+}
+
+enum CourseReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  FLAGGED
 }
 
 model Attachment {
@@ -33,7 +41,10 @@ model Course {
   imageUrl    String?      @db.Text
   price       Float?
   isPublished Boolean      @default(false)
+  reviewStatus CourseReviewStatus @default(APPROVED)
   categoryId  String?
+  adminRevenue Float?
+  teacherRevenue Float?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
@@ -99,6 +110,8 @@ model Purchase {
   id        String   @id @default(uuid())
   userId    String
   courseId  String
+  platformFee Float?
+  teacherEarnings Float?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -186,4 +199,42 @@ model PasswordChangeToken {
   expires        DateTime
 
   @@unique([email, token])
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid())
+  action    String
+  userId    String?
+  details   String?  @db.Text
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
+
+model ReportedContent {
+  id          String   @id @default(uuid())
+  reporterId  String
+  type        String   // "COURSE", "CHAPTER", etc.
+  contentId   String
+  reason      String   @db.Text
+  status      String   @default("PENDING") // PENDING, REVIEWED, RESOLVED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model RecoveryRequest {
+  id        String   @id @default(uuid())
+  email     String
+  ipAddress String?
+  status    String   @default("PENDING") // PENDING, VERIFIED, SUSPICIOUS
+  createdAt DateTime @default(now())
+}
+
+model AprioriRule {
+  id         String   @id @default(uuid())
+  antecedent String   // JSON array of courseIds
+  consequent String   // JSON array of courseIds
+  confidence Float
+  support    Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

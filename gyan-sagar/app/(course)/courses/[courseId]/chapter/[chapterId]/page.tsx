@@ -69,7 +69,7 @@ const ChapterIdPage = async(
                     title = {chapter.title}
                     courseId = {courseId}
                     nextChapterId = {nextChapter?.id}
-                    playbackId = {muxData?.playbackId!}
+                    playbackId = {muxData?.playbackId || ""}
                     isLocked = {isLocked}
                     completeOnEnd = {completeOnEnd}
                     />
@@ -85,7 +85,7 @@ const ChapterIdPage = async(
                            chapterId = {chapterId}
                            courseId = {courseId}
                            nextChapterId = {nextChapter?.id}
-                           isCompleted = {!!userProgress?.isCompleted!}
+                           isCompleted = {!!userProgress?.isCompleted}
                            
                            />
 

@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
+import { LogOut, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { SearchInput } from "./search-input";
 import { isTeacher } from "@/lib/teacher";
@@ -11,7 +11,7 @@ import { UserButton } from "./auth/user-button";
 interface NavbarRoutesProps {
   user?: {
     id?: string;
-    role?: any;
+    role?: string;
     image?: string | null;
     name?: string | null;
     hasPassword?: boolean;
@@ -33,7 +33,7 @@ export const NavbarRoutes = ({ user }: NavbarRoutesProps) => {
         </div>
       )}
 
-      <div className="flex gap-x-2 ml-auto">
+      <div className="flex gap-x-2 ml-auto items-center">
         {isTeacherPage || isCoursePage ? (
           <Link href="/dashboard/search">
             <Button size="sm" variant="ghost">
@@ -48,6 +48,15 @@ export const NavbarRoutes = ({ user }: NavbarRoutesProps) => {
             </Button>
           </Link>
         ) : null}
+
+        {user?.role === "ADMIN" && (
+          <Link href="/admin">
+            <Button size="sm" variant="ghost" className="text-rose-600 hover:text-rose-700 hover:bg-rose-50">
+              <ShieldAlert className="h-4 w-4 mr-2" />
+              Admin
+            </Button>
+          </Link>
+        )}
 
         {user && (
           <UserButton 

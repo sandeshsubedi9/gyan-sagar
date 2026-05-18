@@ -60,7 +60,7 @@ export const ChapterVideoForm = ({ initialData,
     return (
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Chapter's Video
+                Chapter&apos;s Video
                 <Button onClick={toggleEdit} variant="ghost">
                     {isEditing && (
                         <>Cancel</>
@@ -136,7 +136,7 @@ export const ChapterVideoForm = ({ initialData,
     />
 
     <div className="text-xs text-muted-foreground mt-4">
-      Upload this chapter's video.
+      Upload this chapter&apos;s video.
     </div>
   </div>
 )}

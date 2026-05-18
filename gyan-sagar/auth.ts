@@ -53,8 +53,8 @@ export const {
     },
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role;
-        token.hasRole = !!(user as any).role;
+        token.role = (user as { role?: string }).role;
+        token.hasRole = !!(user as { role?: string }).role;
       }
 
       if (!token.sub) return token;
